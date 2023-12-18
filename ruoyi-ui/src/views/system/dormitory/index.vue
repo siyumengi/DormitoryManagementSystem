@@ -1,34 +1,66 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="宿舍楼名称" prop="hallName">
+      <el-form-item label="宿舍楼ID" prop="residenceHallId">
         <el-input
-          v-model="queryParams.hallName"
-          placeholder="请输入宿舍楼名称"
+          v-model="queryParams.residenceHallId"
+          placeholder="请输入宿舍楼ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="寝室号" prop="roomNumber">
+      <el-form-item label="宿舍房间号" prop="roomNumber">
         <el-input
           v-model="queryParams.roomNumber"
-          placeholder="请输入寝室号"
+          placeholder="请输入宿舍房间号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="床位数" prop="bedCount">
+      <el-form-item label="宿舍面积或大小" prop="size">
         <el-input
-          v-model="queryParams.bedCount"
-          placeholder="请输入床位数"
+          v-model="queryParams.size"
+          placeholder="请输入宿舍面积或大小"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="假删标志" prop="isDeleted">
+      <el-form-item label="实际入住的学生数量" prop="occupancyCount">
+        <el-input
+          v-model="queryParams.occupancyCount"
+          placeholder="请输入实际入住的学生数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="总床位数量" prop="totalBedCount">
+        <el-input
+          v-model="queryParams.totalBedCount"
+          placeholder="请输入总床位数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="剩余床位数量" prop="remainingBedCount">
+        <el-input
+          v-model="queryParams.remainingBedCount"
+          placeholder="请输入剩余床位数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="宿舍描述" prop="description">
+        <el-input
+          v-model="queryParams.description"
+          placeholder="请输入宿舍描述"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否删除标记" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
-          placeholder="请输入假删标志"
+          placeholder="请输入是否删除标记"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -87,11 +119,16 @@
 
     <el-table v-loading="loading" :data="dormitoryList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="寝室ID" align="center" prop="id" />
-      <el-table-column label="宿舍楼名称" align="center" prop="hallName" />
-      <el-table-column label="寝室号" align="center" prop="roomNumber" />
-      <el-table-column label="床位数" align="center" prop="bedCount" />
-      <el-table-column label="假删标志" align="center" prop="isDeleted" />
+      <el-table-column label="宿舍ID" align="center" prop="id" />
+      <el-table-column label="宿舍楼ID" align="center" prop="residenceHallId" />
+      <el-table-column label="宿舍房间号" align="center" prop="roomNumber" />
+      <el-table-column label="宿舍面积或大小" align="center" prop="size" />
+      <el-table-column label="实际入住的学生数量" align="center" prop="occupancyCount" />
+      <el-table-column label="宿舍状态" align="center" prop="status" />
+      <el-table-column label="总床位数量" align="center" prop="totalBedCount" />
+      <el-table-column label="剩余床位数量" align="center" prop="remainingBedCount" />
+      <el-table-column label="宿舍描述" align="center" prop="description" />
+      <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -123,17 +160,29 @@
     <!-- 添加或修改dormitory对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="宿舍楼名称" prop="hallName">
-          <el-input v-model="form.hallName" placeholder="请输入宿舍楼名称" />
+        <el-form-item label="宿舍楼ID" prop="residenceHallId">
+          <el-input v-model="form.residenceHallId" placeholder="请输入宿舍楼ID" />
         </el-form-item>
-        <el-form-item label="寝室号" prop="roomNumber">
-          <el-input v-model="form.roomNumber" placeholder="请输入寝室号" />
+        <el-form-item label="宿舍房间号" prop="roomNumber">
+          <el-input v-model="form.roomNumber" placeholder="请输入宿舍房间号" />
         </el-form-item>
-        <el-form-item label="床位数" prop="bedCount">
-          <el-input v-model="form.bedCount" placeholder="请输入床位数" />
+        <el-form-item label="宿舍面积或大小" prop="size">
+          <el-input v-model="form.size" placeholder="请输入宿舍面积或大小" />
         </el-form-item>
-        <el-form-item label="假删标志" prop="isDeleted">
-          <el-input v-model="form.isDeleted" placeholder="请输入假删标志" />
+        <el-form-item label="实际入住的学生数量" prop="occupancyCount">
+          <el-input v-model="form.occupancyCount" placeholder="请输入实际入住的学生数量" />
+        </el-form-item>
+        <el-form-item label="总床位数量" prop="totalBedCount">
+          <el-input v-model="form.totalBedCount" placeholder="请输入总床位数量" />
+        </el-form-item>
+        <el-form-item label="剩余床位数量" prop="remainingBedCount">
+          <el-input v-model="form.remainingBedCount" placeholder="请输入剩余床位数量" />
+        </el-form-item>
+        <el-form-item label="宿舍描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入宿舍描述" />
+        </el-form-item>
+        <el-form-item label="是否删除标记" prop="isDeleted">
+          <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -173,23 +222,34 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        hallName: null,
+        residenceHallId: null,
         roomNumber: null,
-        bedCount: null,
+        size: null,
+        occupancyCount: null,
+        status: null,
+        totalBedCount: null,
+        remainingBedCount: null,
+        description: null,
         isDeleted: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        hallName: [
-          { required: true, message: "宿舍楼名称不能为空", trigger: "blur" }
+        residenceHallId: [
+          { required: true, message: "宿舍楼ID不能为空", trigger: "blur" }
         ],
         roomNumber: [
-          { required: true, message: "寝室号不能为空", trigger: "blur" }
+          { required: true, message: "宿舍房间号不能为空", trigger: "blur" }
         ],
-        bedCount: [
-          { required: true, message: "床位数不能为空", trigger: "blur" }
+        status: [
+          { required: true, message: "宿舍状态不能为空", trigger: "change" }
+        ],
+        totalBedCount: [
+          { required: true, message: "总床位数量不能为空", trigger: "blur" }
+        ],
+        remainingBedCount: [
+          { required: true, message: "剩余床位数量不能为空", trigger: "blur" }
         ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
@@ -198,7 +258,7 @@ export default {
           { required: true, message: "更新时间不能为空", trigger: "blur" }
         ],
         isDeleted: [
-          { required: true, message: "假删标志不能为空", trigger: "blur" }
+          { required: true, message: "是否删除标记不能为空", trigger: "blur" }
         ]
       }
     };
@@ -225,9 +285,14 @@ export default {
     reset() {
       this.form = {
         id: null,
-        hallName: null,
+        residenceHallId: null,
         roomNumber: null,
-        bedCount: null,
+        size: null,
+        occupancyCount: null,
+        status: null,
+        totalBedCount: null,
+        remainingBedCount: null,
+        description: null,
         createTime: null,
         updateTime: null,
         isDeleted: null

@@ -59,4 +59,8 @@ public interface SymDormitoryMapper
      * @return 结果
      */
     public int deleteSymDormitoryByIds(Long[] ids);
+
+
+
+
 }

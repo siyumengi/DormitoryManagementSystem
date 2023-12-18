@@ -9,10 +9,34 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="假删标志" prop="isDeleted">
+      <el-form-item label="宿舍楼地址" prop="address">
+        <el-input
+          v-model="queryParams.address"
+          placeholder="请输入宿舍楼地址"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="设施信息" prop="facilities">
+        <el-input
+          v-model="queryParams.facilities"
+          placeholder="请输入设施信息"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="宿舍楼描述" prop="description">
+        <el-input
+          v-model="queryParams.description"
+          placeholder="请输入宿舍楼描述"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否删除标记" prop="isDeleted">
         <el-input
           v-model="queryParams.isDeleted"
-          placeholder="请输入假删标志"
+          placeholder="请输入是否删除标记"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -73,7 +97,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="宿舍楼ID" align="center" prop="id" />
       <el-table-column label="宿舍楼名称" align="center" prop="name" />
-      <el-table-column label="假删标志" align="center" prop="isDeleted" />
+      <el-table-column label="宿舍楼地址" align="center" prop="address" />
+      <el-table-column label="建造年份" align="center" prop="constructionYear" />
+      <el-table-column label="设施信息" align="center" prop="facilities" />
+      <el-table-column label="宿舍楼描述" align="center" prop="description" />
+      <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -108,8 +136,17 @@
         <el-form-item label="宿舍楼名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入宿舍楼名称" />
         </el-form-item>
-        <el-form-item label="假删标志" prop="isDeleted">
-          <el-input v-model="form.isDeleted" placeholder="请输入假删标志" />
+        <el-form-item label="宿舍楼地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入宿舍楼地址" />
+        </el-form-item>
+        <el-form-item label="设施信息" prop="facilities">
+          <el-input v-model="form.facilities" placeholder="请输入设施信息" />
+        </el-form-item>
+        <el-form-item label="宿舍楼描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入宿舍楼描述" />
+        </el-form-item>
+        <el-form-item label="是否删除标记" prop="isDeleted">
+          <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -150,6 +187,10 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
+        address: null,
+        constructionYear: null,
+        facilities: null,
+        description: null,
         isDeleted: null
       },
       // 表单参数
@@ -159,6 +200,9 @@ export default {
         name: [
           { required: true, message: "宿舍楼名称不能为空", trigger: "blur" }
         ],
+        address: [
+          { required: true, message: "宿舍楼地址不能为空", trigger: "blur" }
+        ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
@@ -166,7 +210,7 @@ export default {
           { required: true, message: "更新时间不能为空", trigger: "blur" }
         ],
         isDeleted: [
-          { required: true, message: "假删标志不能为空", trigger: "blur" }
+          { required: true, message: "是否删除标记不能为空", trigger: "blur" }
         ]
       }
     };
@@ -194,6 +238,10 @@ export default {
       this.form = {
         id: null,
         name: null,
+        address: null,
+        constructionYear: null,
+        facilities: null,
+        description: null,
         createTime: null,
         updateTime: null,
         isDeleted: null

@@ -1,42 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="学号" prop="studentNumber">
-        <el-input
-          v-model="queryParams.studentNumber"
-          placeholder="请输入学号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="姓名" prop="name">
+      <el-form-item label="宿管姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
-        <el-input
-          v-model="queryParams.age"
-          placeholder="请输入年龄"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="专业" prop="major">
-        <el-input
-          v-model="queryParams.major"
-          placeholder="请输入专业"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="班级名称" prop="className">
-        <el-input
-          v-model="queryParams.className"
-          placeholder="请输入班级名称"
+          placeholder="请输入宿管姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -49,37 +17,45 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="宿舍楼ID" prop="residenceHallId">
+      <el-form-item label="负责的宿舍楼ID" prop="residenceHallId">
         <el-input
           v-model="queryParams.residenceHallId"
-          placeholder="请输入宿舍楼ID"
+          placeholder="请输入负责的宿舍楼ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="宿舍房间号" prop="dormitoryRoomNumber">
+      <el-form-item label="入职日期" prop="hireDate">
+        <el-date-picker clearable
+          v-model="queryParams.hireDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择入职日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="工作职责" prop="duties">
         <el-input
-          v-model="queryParams.dormitoryRoomNumber"
-          placeholder="请输入宿舍房间号"
+          v-model="queryParams.duties"
+          placeholder="请输入工作职责"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="入住日期" prop="moveInDate">
-        <el-date-picker clearable
-          v-model="queryParams.moveInDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择入住日期">
-        </el-date-picker>
+      <el-form-item label="上级主管ID" prop="supervisorId">
+        <el-input
+          v-model="queryParams.supervisorId"
+          placeholder="请输入上级主管ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="退宿日期" prop="moveOutDate">
-        <el-date-picker clearable
-          v-model="queryParams.moveOutDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择退宿日期">
-        </el-date-picker>
+      <el-form-item label="宿管描述" prop="description">
+        <el-input
+          v-model="queryParams.description"
+          placeholder="请输入宿管描述"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="是否删除标记" prop="isDeleted">
         <el-input
@@ -103,7 +79,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:student:add']"
+          v-hasPermi="['system:keeper:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -114,7 +90,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:student:edit']"
+          v-hasPermi="['system:keeper:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -125,7 +101,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:student:remove']"
+          v-hasPermi="['system:keeper:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -135,34 +111,27 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:student:export']"
+          v-hasPermi="['system:keeper:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="studentList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="keeperList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="学生ID" align="center" prop="id" />
-      <el-table-column label="学号" align="center" prop="studentNumber" />
-      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="宿管ID" align="center" prop="id" />
+      <el-table-column label="宿管姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="gender" />
-      <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="专业" align="center" prop="major" />
-      <el-table-column label="班级名称" align="center" prop="className" />
       <el-table-column label="联系电话" align="center" prop="phone" />
-      <el-table-column label="宿舍楼ID" align="center" prop="residenceHallId" />
-      <el-table-column label="宿舍房间号" align="center" prop="dormitoryRoomNumber" />
-      <el-table-column label="入住日期" align="center" prop="moveInDate" width="180">
+      <el-table-column label="负责的宿舍楼ID" align="center" prop="residenceHallId" />
+      <el-table-column label="入职日期" align="center" prop="hireDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.moveInDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.hireDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="退宿日期" align="center" prop="moveOutDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.moveOutDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="工作职责" align="center" prop="duties" />
+      <el-table-column label="上级主管ID" align="center" prop="supervisorId" />
+      <el-table-column label="宿管描述" align="center" prop="description" />
       <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -171,14 +140,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:student:edit']"
+            v-hasPermi="['system:keeper:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:student:remove']"
+            v-hasPermi="['system:keeper:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -192,48 +161,34 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改student对话框 -->
+    <!-- 添加或修改keeper对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学号" prop="studentNumber">
-          <el-input v-model="form.studentNumber" placeholder="请输入学号" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" />
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入年龄" />
-        </el-form-item>
-        <el-form-item label="专业" prop="major">
-          <el-input v-model="form.major" placeholder="请输入专业" />
-        </el-form-item>
-        <el-form-item label="班级名称" prop="className">
-          <el-input v-model="form.className" placeholder="请输入班级名称" />
+        <el-form-item label="宿管姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入宿管姓名" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入联系电话" />
         </el-form-item>
-        <el-form-item label="宿舍楼ID" prop="residenceHallId">
-          <el-input v-model="form.residenceHallId" placeholder="请输入宿舍楼ID" />
+        <el-form-item label="负责的宿舍楼ID" prop="residenceHallId">
+          <el-input v-model="form.residenceHallId" placeholder="请输入负责的宿舍楼ID" />
         </el-form-item>
-        <el-form-item label="宿舍房间号" prop="dormitoryRoomNumber">
-          <el-input v-model="form.dormitoryRoomNumber" placeholder="请输入宿舍房间号" />
-        </el-form-item>
-        <el-form-item label="入住日期" prop="moveInDate">
+        <el-form-item label="入职日期" prop="hireDate">
           <el-date-picker clearable
-            v-model="form.moveInDate"
+            v-model="form.hireDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择入住日期">
+            placeholder="请选择入职日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="退宿日期" prop="moveOutDate">
-          <el-date-picker clearable
-            v-model="form.moveOutDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择退宿日期">
-          </el-date-picker>
+        <el-form-item label="工作职责" prop="duties">
+          <el-input v-model="form.duties" placeholder="请输入工作职责" />
+        </el-form-item>
+        <el-form-item label="上级主管ID" prop="supervisorId">
+          <el-input v-model="form.supervisorId" placeholder="请输入上级主管ID" />
+        </el-form-item>
+        <el-form-item label="宿管描述" prop="description">
+          <el-input v-model="form.description" placeholder="请输入宿管描述" />
         </el-form-item>
         <el-form-item label="是否删除标记" prop="isDeleted">
           <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
@@ -248,10 +203,10 @@
 </template>
 
 <script>
-import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/system/student";
+import { listKeeper, getKeeper, delKeeper, addKeeper, updateKeeper } from "@/api/system/keeper";
 
 export default {
-  name: "Student",
+  name: "Keeper",
   data() {
     return {
       // 遮罩层
@@ -266,8 +221,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // student表格数据
-      studentList: [],
+      // keeper表格数据
+      keeperList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -276,52 +231,34 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        studentNumber: null,
         name: null,
         gender: null,
-        age: null,
-        major: null,
-        className: null,
         phone: null,
         residenceHallId: null,
-        dormitoryRoomNumber: null,
-        moveInDate: null,
-        moveOutDate: null,
+        hireDate: null,
+        duties: null,
+        supervisorId: null,
+        description: null,
         isDeleted: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        studentNumber: [
-          { required: true, message: "学号不能为空", trigger: "blur" }
-        ],
         name: [
-          { required: true, message: "姓名不能为空", trigger: "blur" }
+          { required: true, message: "宿管姓名不能为空", trigger: "blur" }
         ],
         gender: [
           { required: true, message: "性别不能为空", trigger: "blur" }
-        ],
-        age: [
-          { required: true, message: "年龄不能为空", trigger: "blur" }
-        ],
-        major: [
-          { required: true, message: "专业不能为空", trigger: "blur" }
-        ],
-        className: [
-          { required: true, message: "班级名称不能为空", trigger: "blur" }
         ],
         phone: [
           { required: true, message: "联系电话不能为空", trigger: "blur" }
         ],
         residenceHallId: [
-          { required: true, message: "宿舍楼ID不能为空", trigger: "blur" }
+          { required: true, message: "负责的宿舍楼ID不能为空", trigger: "blur" }
         ],
-        dormitoryRoomNumber: [
-          { required: true, message: "宿舍房间号不能为空", trigger: "blur" }
-        ],
-        moveInDate: [
-          { required: true, message: "入住日期不能为空", trigger: "blur" }
+        hireDate: [
+          { required: true, message: "入职日期不能为空", trigger: "blur" }
         ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
@@ -339,11 +276,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询student列表 */
+    /** 查询keeper列表 */
     getList() {
       this.loading = true;
-      listStudent(this.queryParams).then(response => {
-        this.studentList = response.rows;
+      listKeeper(this.queryParams).then(response => {
+        this.keeperList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -357,17 +294,14 @@ export default {
     reset() {
       this.form = {
         id: null,
-        studentNumber: null,
         name: null,
         gender: null,
-        age: null,
-        major: null,
-        className: null,
         phone: null,
         residenceHallId: null,
-        dormitoryRoomNumber: null,
-        moveInDate: null,
-        moveOutDate: null,
+        hireDate: null,
+        duties: null,
+        supervisorId: null,
+        description: null,
         createTime: null,
         updateTime: null,
         isDeleted: null
@@ -394,16 +328,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加student";
+      this.title = "添加keeper";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getStudent(id).then(response => {
+      getKeeper(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改student";
+        this.title = "修改keeper";
       });
     },
     /** 提交按钮 */
@@ -411,13 +345,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateStudent(this.form).then(response => {
+            updateKeeper(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addStudent(this.form).then(response => {
+            addKeeper(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -429,8 +363,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除student编号为"' + ids + '"的数据项？').then(function() {
-        return delStudent(ids);
+      this.$modal.confirm('是否确认删除keeper编号为"' + ids + '"的数据项？').then(function() {
+        return delKeeper(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -438,9 +372,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/student/export', {
+      this.download('system/keeper/export', {
         ...this.queryParams
-      }, `student_${new Date().getTime()}.xlsx`)
+      }, `keeper_${new Date().getTime()}.xlsx`)
     }
   }
 };

@@ -42,7 +42,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSymDormitoryVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectSymDormitoryByHalideAndRoomNumber"
+            resultType="com.ruoyi.web.controller.sym.domain.SymDormitory">
+        select * from sym_dormitory where residence_hall_id = #{residenceHallId} and room_number = #{roomNumber}
+    </select>
+
+
     <insert id="insertSymDormitory" parameterType="SymDormitory" useGeneratedKeys="true" keyProperty="id">
         insert into sym_dormitory
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -59,4 +59,8 @@ public interface SymStudentMapper
      * @return 结果
      */
     public int deleteSymStudentByIds(Long[] ids);
+
+
+
+
 }
