@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymStudentMapper">
+    
+    <resultMap type="SymStudent" id="SymStudentResult">
+        <result property="id"    column="id"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="name"    column="name"    />
+        <result property="gender"    column="gender"    />
+        <result property="age"    column="age"    />
+        <result property="major"    column="major"    />
+        <result property="className"    column="class_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="residenceHallId"    column="residence_hall_id"    />
+        <result property="dormitoryRoomNumber"    column="dormitory_room_number"    />
+        <result property="moveInDate"    column="move_in_date"    />
+        <result property="moveOutDate"    column="move_out_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectSymStudentVo">
+        select id, student_number, name, gender, age, major, class_name, phone, residence_hall_id, dormitory_room_number, move_in_date, move_out_date, create_time, update_time, is_deleted from sym_student
+    </sql>
+
+    <select id="selectSymStudentList" parameterType="SymStudent" resultMap="SymStudentResult">
+        <include refid="selectSymStudentVo"/>
+        <where>  
+            <if test="studentNumber != null  and studentNumber != ''"> and student_number = #{studentNumber}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="residenceHallId != null "> and residence_hall_id = #{residenceHallId}</if>
+            <if test="dormitoryRoomNumber != null  and dormitoryRoomNumber != ''"> and dormitory_room_number = #{dormitoryRoomNumber}</if>
+            <if test="moveInDate != null "> and move_in_date = #{moveInDate}</if>
+            <if test="moveOutDate != null "> and move_out_date = #{moveOutDate}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymStudentById" parameterType="Long" resultMap="SymStudentResult">
+        <include refid="selectSymStudentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymStudent" parameterType="SymStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">student_number,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="gender != null and gender != ''">gender,</if>
+            <if test="age != null">age,</if>
+            <if test="major != null and major != ''">major,</if>
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="residenceHallId != null">residence_hall_id,</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">dormitory_room_number,</if>
+            <if test="moveInDate != null">move_in_date,</if>
+            <if test="moveOutDate != null">move_out_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">#{studentNumber},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="gender != null and gender != ''">#{gender},</if>
+            <if test="age != null">#{age},</if>
+            <if test="major != null and major != ''">#{major},</if>
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="residenceHallId != null">#{residenceHallId},</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">#{dormitoryRoomNumber},</if>
+            <if test="moveInDate != null">#{moveInDate},</if>
+            <if test="moveOutDate != null">#{moveOutDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymStudent" parameterType="SymStudent">
+        update sym_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">student_number = #{studentNumber},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="major != null and major != ''">major = #{major},</if>
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="residenceHallId != null">residence_hall_id = #{residenceHallId},</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">dormitory_room_number = #{dormitoryRoomNumber},</if>
+            <if test="moveInDate != null">move_in_date = #{moveInDate},</if>
+            <if test="moveOutDate != null">move_out_date = #{moveOutDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymStudentById" parameterType="Long">
+        delete from sym_student where id = #{id}
+    </delete>
+
+    <delete id="deleteSymStudentByIds" parameterType="String">
+        delete from sym_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

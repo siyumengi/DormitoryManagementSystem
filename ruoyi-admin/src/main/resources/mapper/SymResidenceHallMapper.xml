@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymResidenceHallMapper">
+    
+    <resultMap type="SymResidenceHall" id="SymResidenceHallResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="address"    column="address"    />
+        <result property="constructionYear"    column="construction_year"    />
+        <result property="facilities"    column="facilities"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectSymResidenceHallVo">
+        select id, name, address, construction_year, facilities, description, create_time, update_time, is_deleted from sym_residence_hall
+    </sql>
+
+    <select id="selectSymResidenceHallList" parameterType="SymResidenceHall" resultMap="SymResidenceHallResult">
+        <include refid="selectSymResidenceHallVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="constructionYear != null  and constructionYear != ''"> and construction_year = #{constructionYear}</if>
+            <if test="facilities != null  and facilities != ''"> and facilities = #{facilities}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymResidenceHallById" parameterType="Long" resultMap="SymResidenceHallResult">
+        <include refid="selectSymResidenceHallVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymResidenceHall" parameterType="SymResidenceHall" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_residence_hall
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="constructionYear != null">construction_year,</if>
+            <if test="facilities != null">facilities,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="constructionYear != null">#{constructionYear},</if>
+            <if test="facilities != null">#{facilities},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymResidenceHall" parameterType="SymResidenceHall">
+        update sym_residence_hall
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="constructionYear != null">construction_year = #{constructionYear},</if>
+            <if test="facilities != null">facilities = #{facilities},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymResidenceHallById" parameterType="Long">
+        delete from sym_residence_hall where id = #{id}
+    </delete>
+
+    <delete id="deleteSymResidenceHallByIds" parameterType="String">
+        delete from sym_residence_hall where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

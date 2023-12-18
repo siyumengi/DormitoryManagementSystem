@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymDormitoryMapper">
+    
+    <resultMap type="SymDormitory" id="SymDormitoryResult">
+        <result property="id"    column="id"    />
+        <result property="residenceHallId"    column="residence_hall_id"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="size"    column="size"    />
+        <result property="occupancyCount"    column="occupancy_count"    />
+        <result property="status"    column="status"    />
+        <result property="totalBedCount"    column="total_bed_count"    />
+        <result property="remainingBedCount"    column="remaining_bed_count"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectSymDormitoryVo">
+        select id, residence_hall_id, room_number, size, occupancy_count, status, total_bed_count, remaining_bed_count, description, create_time, update_time, is_deleted from sym_dormitory
+    </sql>
+
+    <select id="selectSymDormitoryList" parameterType="SymDormitory" resultMap="SymDormitoryResult">
+        <include refid="selectSymDormitoryVo"/>
+        <where>  
+            <if test="residenceHallId != null "> and residence_hall_id = #{residenceHallId}</if>
+            <if test="roomNumber != null  and roomNumber != ''"> and room_number = #{roomNumber}</if>
+            <if test="size != null  and size != ''"> and size = #{size}</if>
+            <if test="occupancyCount != null "> and occupancy_count = #{occupancyCount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="totalBedCount != null "> and total_bed_count = #{totalBedCount}</if>
+            <if test="remainingBedCount != null "> and remaining_bed_count = #{remainingBedCount}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymDormitoryById" parameterType="Long" resultMap="SymDormitoryResult">
+        <include refid="selectSymDormitoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymDormitory" parameterType="SymDormitory" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_dormitory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="residenceHallId != null">residence_hall_id,</if>
+            <if test="roomNumber != null and roomNumber != ''">room_number,</if>
+            <if test="size != null">size,</if>
+            <if test="occupancyCount != null">occupancy_count,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="totalBedCount != null">total_bed_count,</if>
+            <if test="remainingBedCount != null">remaining_bed_count,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="residenceHallId != null">#{residenceHallId},</if>
+            <if test="roomNumber != null and roomNumber != ''">#{roomNumber},</if>
+            <if test="size != null">#{size},</if>
+            <if test="occupancyCount != null">#{occupancyCount},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="totalBedCount != null">#{totalBedCount},</if>
+            <if test="remainingBedCount != null">#{remainingBedCount},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymDormitory" parameterType="SymDormitory">
+        update sym_dormitory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="residenceHallId != null">residence_hall_id = #{residenceHallId},</if>
+            <if test="roomNumber != null and roomNumber != ''">room_number = #{roomNumber},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="occupancyCount != null">occupancy_count = #{occupancyCount},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="totalBedCount != null">total_bed_count = #{totalBedCount},</if>
+            <if test="remainingBedCount != null">remaining_bed_count = #{remainingBedCount},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymDormitoryById" parameterType="Long">
+        delete from sym_dormitory where id = #{id}
+    </delete>
+
+    <delete id="deleteSymDormitoryByIds" parameterType="String">
+        delete from sym_dormitory where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
