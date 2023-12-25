@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="宿舍楼ID" prop="residenceHallId">
+      <el-form-item label="宿舍楼" prop="residenceHallId">
         <el-input
           v-model="queryParams.residenceHallId"
-          placeholder="请输入宿舍楼ID"
+          placeholder="请输入宿舍楼"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -17,50 +17,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="宿舍面积或大小" prop="size">
+      <el-form-item label="宿舍面积" prop="size">
         <el-input
           v-model="queryParams.size"
           placeholder="请输入宿舍面积或大小"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="实际入住的学生数量" prop="occupancyCount">
-        <el-input
-          v-model="queryParams.occupancyCount"
-          placeholder="请输入实际入住的学生数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总床位数量" prop="totalBedCount">
-        <el-input
-          v-model="queryParams.totalBedCount"
-          placeholder="请输入总床位数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="剩余床位数量" prop="remainingBedCount">
-        <el-input
-          v-model="queryParams.remainingBedCount"
-          placeholder="请输入剩余床位数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="宿舍描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入宿舍描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除标记" prop="isDeleted">
-        <el-input
-          v-model="queryParams.isDeleted"
-          placeholder="请输入是否删除标记"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -119,16 +79,19 @@
 
     <el-table v-loading="loading" :data="dormitoryList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="宿舍ID" align="center" prop="id" />
-      <el-table-column label="宿舍楼ID" align="center" prop="residenceHallId" />
+      <el-table-column label="序号" align="center" prop="id" />
+      <el-table-column label="宿舍楼" align="center" prop="residenceHallId" >
+        <template #default="scope">
+          {{ getResidenceHallName(scope.row.residenceHallId) }}
+        </template>
+      </el-table-column>
       <el-table-column label="宿舍房间号" align="center" prop="roomNumber" />
-      <el-table-column label="宿舍面积或大小" align="center" prop="size" />
-      <el-table-column label="实际入住的学生数量" align="center" prop="occupancyCount" />
+      <el-table-column label="宿舍面积" align="center" prop="size" />
+      <el-table-column label="实际入住数量" align="center" prop="occupancyCount" />
       <el-table-column label="宿舍状态" align="center" prop="status" />
       <el-table-column label="总床位数量" align="center" prop="totalBedCount" />
       <el-table-column label="剩余床位数量" align="center" prop="remainingBedCount" />
       <el-table-column label="宿舍描述" align="center" prop="description" />
-      <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -148,7 +111,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -166,23 +129,14 @@
         <el-form-item label="宿舍房间号" prop="roomNumber">
           <el-input v-model="form.roomNumber" placeholder="请输入宿舍房间号" />
         </el-form-item>
-        <el-form-item label="宿舍面积或大小" prop="size">
+        <el-form-item label="宿舍面积" prop="size">
           <el-input v-model="form.size" placeholder="请输入宿舍面积或大小" />
-        </el-form-item>
-        <el-form-item label="实际入住的学生数量" prop="occupancyCount">
-          <el-input v-model="form.occupancyCount" placeholder="请输入实际入住的学生数量" />
         </el-form-item>
         <el-form-item label="总床位数量" prop="totalBedCount">
           <el-input v-model="form.totalBedCount" placeholder="请输入总床位数量" />
         </el-form-item>
-        <el-form-item label="剩余床位数量" prop="remainingBedCount">
-          <el-input v-model="form.remainingBedCount" placeholder="请输入剩余床位数量" />
-        </el-form-item>
         <el-form-item label="宿舍描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入宿舍描述" />
-        </el-form-item>
-        <el-form-item label="是否删除标记" prop="isDeleted">
-          <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -267,6 +221,15 @@ export default {
     this.getList();
   },
   methods: {
+    getResidenceHallName(residenceHallId) {
+      const residenceHalls = {
+        1: '宿舍楼1',
+        2: '宿舍楼2',
+        3: '宿舍楼3',
+        4: '宿舍楼4'
+      };
+      return residenceHalls[residenceHallId];
+    },
     /** 查询dormitory列表 */
     getList() {
       this.loading = true;

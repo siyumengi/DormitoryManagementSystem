@@ -41,12 +41,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="moveInDate != null "> and move_in_date = #{moveInDate}</if>
             <if test="moveOutDate != null "> and move_out_date = #{moveOutDate}</if>
             <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            and is_deleted = 0
         </where>
     </select>
     
     <select id="selectSymStudentById" parameterType="Long" resultMap="SymStudentResult">
         <include refid="selectSymStudentVo"/>
-        where id = #{id}
+        where id = #{id} and is_deleted = 0
     </select>
         
     <insert id="insertSymStudent" parameterType="SymStudent" useGeneratedKeys="true" keyProperty="id">
@@ -107,11 +108,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSymStudentById" parameterType="Long">
-        delete from sym_student where id = #{id}
+
+        update sym_student set is_deleted = 1 where id = #{id}
+
     </delete>
 
     <delete id="deleteSymStudentByIds" parameterType="String">
-        delete from sym_student where id in 
+        update sym_student set is_deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

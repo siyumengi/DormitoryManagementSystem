@@ -7,7 +7,7 @@
     <groupId>com.ruoyi</groupId>
     <artifactId>ruoyi</artifactId>
     <version>3.8.7</version>
-    <description>若依管理系统</description>
+    <description>宿舍后台管理系统</description>
     
     <properties>
         <ruoyi.version>3.8.7</ruoyi.version>

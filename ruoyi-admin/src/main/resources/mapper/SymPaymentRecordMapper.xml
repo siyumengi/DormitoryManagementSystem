@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymPaymentRecordMapper">
+    
+    <resultMap type="SymPaymentRecord" id="SymPaymentRecordResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="studentContact"    column="student_contact"    />
+        <result property="residenceHallId"    column="residence_hall_id"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="amount"    column="amount"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <sql id="selectSymPaymentRecordVo">
+        select id, student_id, student_name, student_contact, residence_hall_id, room_number, amount, payment_status, payment_time, create_time, update_time, is_deleted from sym_payment_record
+    </sql>
+
+    <select id="selectSymPaymentRecordList" parameterType="SymPaymentRecord" resultMap="SymPaymentRecordResult">
+        <include refid="selectSymPaymentRecordVo"/>
+        <where>  
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentContact != null  and studentContact != ''"> and student_contact = #{studentContact}</if>
+            <if test="residenceHallId != null "> and residence_hall_id = #{residenceHallId}</if>
+            <if test="roomNumber != null  and roomNumber != ''"> and room_number = #{roomNumber}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
+            <if test="paymentTime != null "> and payment_time = #{paymentTime}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymPaymentRecordById" parameterType="Long" resultMap="SymPaymentRecordResult">
+        <include refid="selectSymPaymentRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymPaymentRecord" parameterType="SymPaymentRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_payment_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="studentName != null and studentName != ''">student_name,</if>
+            <if test="studentContact != null and studentContact != ''">student_contact,</if>
+            <if test="residenceHallId != null">residence_hall_id,</if>
+            <if test="roomNumber != null and roomNumber != ''">room_number,</if>
+            <if test="amount != null">amount,</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status,</if>
+            <if test="paymentTime != null">payment_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="studentName != null and studentName != ''">#{studentName},</if>
+            <if test="studentContact != null and studentContact != ''">#{studentContact},</if>
+            <if test="residenceHallId != null">#{residenceHallId},</if>
+            <if test="roomNumber != null and roomNumber != ''">#{roomNumber},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">#{paymentStatus},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymPaymentRecord" parameterType="SymPaymentRecord">
+        update sym_payment_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="studentName != null and studentName != ''">student_name = #{studentName},</if>
+            <if test="studentContact != null and studentContact != ''">student_contact = #{studentContact},</if>
+            <if test="residenceHallId != null">residence_hall_id = #{residenceHallId},</if>
+            <if test="roomNumber != null and roomNumber != ''">room_number = #{roomNumber},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymPaymentRecordById" parameterType="Long">
+        update sym_payment_record set is_deleted = 1 where id = #{id}
+    </delete>
+
+    <delete id="deleteSymPaymentRecordByIds" parameterType="String">
+        update sym_payment_record set is_deleted = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -97,11 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSymDormitoryById" parameterType="Long">
-        delete from sym_dormitory where id = #{id}
+        update sym_dormitory set is_deleted = 1 where id = #{id}
     </delete>
 
     <delete id="deleteSymDormitoryByIds" parameterType="String">
-        delete from sym_dormitory where id in 
+        update sym_dormitory set is_deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

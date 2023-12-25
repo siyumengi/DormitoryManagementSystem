@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="宿舍楼名称" prop="name">
+      <el-form-item label="宿舍楼" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入宿舍楼名称"
@@ -9,34 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="宿舍楼地址" prop="address">
+      <el-form-item label="宿舍地址" prop="address">
         <el-input
           v-model="queryParams.address"
           placeholder="请输入宿舍楼地址"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="设施信息" prop="facilities">
-        <el-input
-          v-model="queryParams.facilities"
-          placeholder="请输入设施信息"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="宿舍楼描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入宿舍楼描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除标记" prop="isDeleted">
-        <el-input
-          v-model="queryParams.isDeleted"
-          placeholder="请输入是否删除标记"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,13 +71,12 @@
 
     <el-table v-loading="loading" :data="hallList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="宿舍楼ID" align="center" prop="id" />
+      <el-table-column label="序号" align="center" prop="id" />
       <el-table-column label="宿舍楼名称" align="center" prop="name" />
       <el-table-column label="宿舍楼地址" align="center" prop="address" />
       <el-table-column label="建造年份" align="center" prop="constructionYear" />
       <el-table-column label="设施信息" align="center" prop="facilities" />
       <el-table-column label="宿舍楼描述" align="center" prop="description" />
-      <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -121,7 +96,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -144,9 +119,6 @@
         </el-form-item>
         <el-form-item label="宿舍楼描述" prop="description">
           <el-input v-model="form.description" placeholder="请输入宿舍楼描述" />
-        </el-form-item>
-        <el-form-item label="是否删除标记" prop="isDeleted">
-          <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

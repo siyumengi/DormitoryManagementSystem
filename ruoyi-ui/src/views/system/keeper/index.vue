@@ -17,54 +17,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="负责的宿舍楼ID" prop="residenceHallId">
-        <el-input
-          v-model="queryParams.residenceHallId"
-          placeholder="请输入负责的宿舍楼ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="入职日期" prop="hireDate">
-        <el-date-picker clearable
-          v-model="queryParams.hireDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择入职日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="工作职责" prop="duties">
-        <el-input
-          v-model="queryParams.duties"
-          placeholder="请输入工作职责"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="上级主管ID" prop="supervisorId">
-        <el-input
-          v-model="queryParams.supervisorId"
-          placeholder="请输入上级主管ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="宿管描述" prop="description">
-        <el-input
-          v-model="queryParams.description"
-          placeholder="请输入宿管描述"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除标记" prop="isDeleted">
-        <el-input
-          v-model="queryParams.isDeleted"
-          placeholder="请输入是否删除标记"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -80,7 +33,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:keeper:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -91,7 +45,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:keeper:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -102,7 +57,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:keeper:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -112,27 +68,30 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:keeper:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="keeperList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="宿管ID" align="center" prop="id" />
-      <el-table-column label="宿管姓名" align="center" prop="name" />
-      <el-table-column label="性别" align="center" prop="gender" />
-      <el-table-column label="联系电话" align="center" prop="phone" />
-      <el-table-column label="负责的宿舍楼ID" align="center" prop="residenceHallId" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="序号" align="center" prop="id"/>
+      <el-table-column label="宿管姓名" align="center" prop="name"/>
+      <el-table-column label="性别" align="center" prop="gender"/>
+      <el-table-column label="联系电话" align="center" prop="phone"/>
+      <el-table-column label="负责的宿舍楼" align="center" prop="residenceHallId">
+        <template #default="scope">
+          {{ getResidenceHallName(scope.row.residenceHallId) }}
+        </template>
+      </el-table-column>
       <el-table-column label="入职日期" align="center" prop="hireDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.hireDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="工作职责" align="center" prop="duties" />
-      <el-table-column label="上级主管ID" align="center" prop="supervisorId" />
-      <el-table-column label="宿管描述" align="center" prop="description" />
-      <el-table-column label="是否删除标记" align="center" prop="isDeleted" />
+      <el-table-column label="工作职责" align="center" prop="duties"/>
+      <el-table-column label="宿管描述" align="center" prop="description"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -141,18 +100,20 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:keeper:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:keeper:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -165,33 +126,24 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="宿管姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入宿管姓名" />
+          <el-input v-model="form.name" placeholder="请输入宿管姓名"/>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" />
+          <el-input v-model="form.phone" placeholder="请输入联系电话"/>
         </el-form-item>
-        <el-form-item label="负责的宿舍楼ID" prop="residenceHallId">
-          <el-input v-model="form.residenceHallId" placeholder="请输入负责的宿舍楼ID" />
+        <el-form-item label="负责的宿舍楼" prop="residenceHallId">
+          <el-input v-model="form.residenceHallId" placeholder="请输入负责的宿舍楼"/>
         </el-form-item>
         <el-form-item label="入职日期" prop="hireDate">
           <el-date-picker clearable
-            v-model="form.hireDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择入职日期">
+                          v-model="form.hireDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择入职日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="工作职责" prop="duties">
-          <el-input v-model="form.duties" placeholder="请输入工作职责" />
-        </el-form-item>
-        <el-form-item label="上级主管ID" prop="supervisorId">
-          <el-input v-model="form.supervisorId" placeholder="请输入上级主管ID" />
-        </el-form-item>
-        <el-form-item label="宿管描述" prop="description">
-          <el-input v-model="form.description" placeholder="请输入宿管描述" />
-        </el-form-item>
-        <el-form-item label="是否删除标记" prop="isDeleted">
-          <el-input v-model="form.isDeleted" placeholder="请输入是否删除标记" />
+          <el-input v-model="form.duties" placeholder="请输入工作职责"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -203,7 +155,7 @@
 </template>
 
 <script>
-import { listKeeper, getKeeper, delKeeper, addKeeper, updateKeeper } from "@/api/system/keeper";
+import {listKeeper, getKeeper, delKeeper, addKeeper, updateKeeper} from "@/api/system/keeper";
 
 export default {
   name: "Keeper",
@@ -246,29 +198,27 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "宿管姓名不能为空", trigger: "blur" }
+          {required: true, message: "宿管姓名不能为空", trigger: "blur"}
         ],
         gender: [
-          { required: true, message: "性别不能为空", trigger: "blur" }
+          {required: true, message: "性别不能为空", trigger: "blur"}
         ],
         phone: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" }
+          {required: true, message: "联系电话不能为空", trigger: "blur"}
         ],
         residenceHallId: [
-          { required: true, message: "负责的宿舍楼ID不能为空", trigger: "blur" }
+          {required: true, message: "负责的宿舍楼ID不能为空", trigger: "blur"}
         ],
         hireDate: [
-          { required: true, message: "入职日期不能为空", trigger: "blur" }
+          {required: true, message: "入职日期不能为空", trigger: "blur"}
         ],
         createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+          {required: true, message: "创建时间不能为空", trigger: "blur"}
         ],
         updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
+          {required: true, message: "更新时间不能为空", trigger: "blur"}
         ],
-        isDeleted: [
-          { required: true, message: "是否删除标记不能为空", trigger: "blur" }
-        ]
+
       }
     };
   },
@@ -276,6 +226,15 @@ export default {
     this.getList();
   },
   methods: {
+    getResidenceHallName(residenceHallId) {
+      const residenceHalls = {
+        1: '宿舍楼1',
+        2: '宿舍楼2',
+        3: '宿舍楼3',
+        4: '宿舍楼4'
+      };
+      return residenceHalls[residenceHallId];
+    },
     /** 查询keeper列表 */
     getList() {
       this.loading = true;
@@ -321,7 +280,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -363,12 +322,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除keeper编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除keeper编号为"' + ids + '"的数据项？').then(function () {
         return delKeeper(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

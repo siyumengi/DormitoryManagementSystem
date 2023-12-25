@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymRepairRequestMapper">
+    
+    <resultMap type="SymRepairRequest" id="SymRepairRequestResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="dormitoryId"    column="dormitory_id"    />
+        <result property="dormitoryRoomNumber"    column="dormitory_room_number"    />
+        <result property="repairDescription"    column="repair_description"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSymRepairRequestVo">
+        select id, student_id, dormitory_id, dormitory_room_number, repair_description, status, create_time, update_time from sym_repair_request
+    </sql>
+
+    <select id="selectSymRepairRequestList" parameterType="SymRepairRequest" resultMap="SymRepairRequestResult">
+        <include refid="selectSymRepairRequestVo"/>
+        <where>  
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="dormitoryId != null "> and dormitory_id = #{dormitoryId}</if>
+            <if test="dormitoryRoomNumber != null  and dormitoryRoomNumber != ''"> and dormitory_room_number = #{dormitoryRoomNumber}</if>
+            <if test="repairDescription != null  and repairDescription != ''"> and repair_description = #{repairDescription}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymRepairRequestById" parameterType="Long" resultMap="SymRepairRequestResult">
+        <include refid="selectSymRepairRequestVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymRepairRequest" parameterType="SymRepairRequest" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_repair_request
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="dormitoryId != null">dormitory_id,</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">dormitory_room_number,</if>
+            <if test="repairDescription != null and repairDescription != ''">repair_description,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="dormitoryId != null">#{dormitoryId},</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">#{dormitoryRoomNumber},</if>
+            <if test="repairDescription != null and repairDescription != ''">#{repairDescription},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymRepairRequest" parameterType="SymRepairRequest">
+        update sym_repair_request
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="dormitoryId != null">dormitory_id = #{dormitoryId},</if>
+            <if test="dormitoryRoomNumber != null and dormitoryRoomNumber != ''">dormitory_room_number = #{dormitoryRoomNumber},</if>
+            <if test="repairDescription != null and repairDescription != ''">repair_description = #{repairDescription},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymRepairRequestById" parameterType="Long">
+        delete from sym_repair_request where id = #{id}
+    </delete>
+
+    <delete id="deleteSymRepairRequestByIds" parameterType="String">
+        delete from sym_repair_request where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

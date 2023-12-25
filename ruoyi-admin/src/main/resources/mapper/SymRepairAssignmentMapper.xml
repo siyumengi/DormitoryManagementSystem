@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.web.controller.sym.mapper.SymRepairAssignmentMapper">
+    
+    <resultMap type="SymRepairAssignment" id="SymRepairAssignmentResult">
+        <result property="id"    column="id"    />
+        <result property="repairRequestId"    column="repair_request_id"    />
+        <result property="dormitoryKeeperId"    column="dormitory_keeper_id"    />
+        <result property="assignmentTime"    column="assignment_time"    />
+        <result property="startRepairTime"    column="start_repair_time"    />
+        <result property="finishRepairTime"    column="finish_repair_time"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSymRepairAssignmentVo">
+        select id, repair_request_id, dormitory_keeper_id, assignment_time, start_repair_time, finish_repair_time, description, create_time, update_time from sym_repair_assignment
+    </sql>
+
+    <select id="selectSymRepairAssignmentList" parameterType="SymRepairAssignment" resultMap="SymRepairAssignmentResult">
+        <include refid="selectSymRepairAssignmentVo"/>
+        <where>  
+            <if test="repairRequestId != null "> and repair_request_id = #{repairRequestId}</if>
+            <if test="dormitoryKeeperId != null "> and dormitory_keeper_id = #{dormitoryKeeperId}</if>
+            <if test="assignmentTime != null "> and assignment_time = #{assignmentTime}</if>
+            <if test="startRepairTime != null "> and start_repair_time = #{startRepairTime}</if>
+            <if test="finishRepairTime != null "> and finish_repair_time = #{finishRepairTime}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectSymRepairAssignmentById" parameterType="Long" resultMap="SymRepairAssignmentResult">
+        <include refid="selectSymRepairAssignmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSymRepairAssignment" parameterType="SymRepairAssignment" useGeneratedKeys="true" keyProperty="id">
+        insert into sym_repair_assignment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repairRequestId != null">repair_request_id,</if>
+            <if test="dormitoryKeeperId != null">dormitory_keeper_id,</if>
+            <if test="assignmentTime != null">assignment_time,</if>
+            <if test="startRepairTime != null">start_repair_time,</if>
+            <if test="finishRepairTime != null">finish_repair_time,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="repairRequestId != null">#{repairRequestId},</if>
+            <if test="dormitoryKeeperId != null">#{dormitoryKeeperId},</if>
+            <if test="assignmentTime != null">#{assignmentTime},</if>
+            <if test="startRepairTime != null">#{startRepairTime},</if>
+            <if test="finishRepairTime != null">#{finishRepairTime},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSymRepairAssignment" parameterType="SymRepairAssignment">
+        update sym_repair_assignment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="repairRequestId != null">repair_request_id = #{repairRequestId},</if>
+            <if test="dormitoryKeeperId != null">dormitory_keeper_id = #{dormitoryKeeperId},</if>
+            <if test="assignmentTime != null">assignment_time = #{assignmentTime},</if>
+            <if test="startRepairTime != null">start_repair_time = #{startRepairTime},</if>
+            <if test="finishRepairTime != null">finish_repair_time = #{finishRepairTime},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSymRepairAssignmentById" parameterType="Long">
+        delete from sym_repair_assignment where id = #{id}
+    </delete>
+
+    <delete id="deleteSymRepairAssignmentByIds" parameterType="String">
+        delete from sym_repair_assignment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

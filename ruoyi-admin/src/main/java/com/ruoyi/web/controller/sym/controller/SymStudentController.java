@@ -63,7 +63,7 @@ public class SymStudentController extends BaseController
     /**
      * 获取student详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:student:query')")
+//    @PreAuthorize("@ss.hasPermi('system:student:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

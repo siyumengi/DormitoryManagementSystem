@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.sym.service;
 
 import com.ruoyi.web.controller.sym.domain.SymDormitory;
+import com.ruoyi.web.controller.sym.domain.SymStudent;
 
 import java.util.List;
 
@@ -59,4 +60,12 @@ public interface ISymDormitoryService
      * @return 结果
      */
     public int deleteSymDormitoryById(Long id);
+
+    /**
+     * 查询dormitory列表
+     *
+     * @param symDormitory dormitory
+     * @return dormitory集合
+     */
+    List<SymStudent> searchlist(SymDormitory symDormitory);
 }
