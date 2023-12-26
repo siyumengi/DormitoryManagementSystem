@@ -58,4 +58,8 @@ public interface ISymRepairRequestService
      * @return 结果
      */
     public int deleteSymRepairRequestById(Long id);
+
+    List<SymRepairRequest> selectRequestList(SymRepairRequest symRepairRequest);
+
+    int insertRequest(SymRepairRequest symRepairRequest);
 }
