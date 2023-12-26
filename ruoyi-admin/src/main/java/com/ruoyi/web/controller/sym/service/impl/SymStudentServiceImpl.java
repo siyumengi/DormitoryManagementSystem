@@ -230,7 +230,7 @@ public class SymStudentServiceImpl implements ISymStudentService {
         symDormitory.setOccupancyCount(symDormitory.getOccupancyCount() - 1);
         symDormitory.setRemainingBedCount(symDormitory.getRemainingBedCount() + 1);
         if (symDormitory.getOccupancyCount() < symDormitory.getTotalBedCount()) {
-            symDormitory.setDescription("空闲");
+            symDormitory.setStatus("空闲");
         }
         int res = symDormitoryService.updateSymDormitory(symDormitory);
         if (res == 0) {
