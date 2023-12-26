@@ -332,7 +332,7 @@ export default {
     /** 查询student列表 */
     getList() {
       this.loading = true;
-      listStudent(1).then(response => {
+      listStudent(this.queryParams).then(response => {
         this.studentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -375,6 +375,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      console.log(this.queryParams)
       this.queryParams.pageNum = 1;
       this.getList();
     },
