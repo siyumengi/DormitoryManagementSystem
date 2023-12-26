@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="this.username !== 'admin'">
     <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
       <el-form-item label="学号" prop="studentNumber" clearable>
         <el-input v-model="formData.studentNumber" placeholder="请输入学号" :style="{width: '100%'}"></el-input>
@@ -13,7 +13,7 @@
       <el-form-item label="性别" prop="age" clearable>
         <el-input v-model="formData.age" placeholder="请输入性别" clearable :style="{width: '100%'}"></el-input>
       </el-form-item>
-      <el-form-item label="班级" prop="className" clearable >
+      <el-form-item label="班级" prop="className" clearable>
         <el-input v-model="formData.className" placeholder="请输入班级" clearable :style="{width: '100%'}">
         </el-input>
       </el-form-item>
@@ -34,6 +34,11 @@
       </el-form-item>
     </el-form>
   </div>
+  <div v-else>
+
+    <img src="../../src/assets/images/1.jpg" alt="" style="width: 100%;">
+  </div>
+
 </template>
 <script>
 import {getStudent} from "@/api/system/student";
@@ -97,12 +102,14 @@ export default {
           trigger: 'blur'
         }],
       },
+      username: "",
     }
   },
   computed: {},
   watch: {},
   created() {
     this.getList();
+    this.username = this.$store.state.user.name;
   },
   mounted() {
   },
@@ -111,7 +118,7 @@ export default {
       this.loading = true;
       getStudent(1).then(response => {
         // 转换成 1 宿舍楼1 的规律
-        response.data.residenceHallId ='宿舍楼' + response.data.residenceHallId;
+        response.data.residenceHallId = '宿舍楼' + response.data.residenceHallId;
         this.formData = response.data;
       });
     },

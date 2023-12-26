@@ -72,7 +72,14 @@ public class SymDormitorySBalanceController extends BaseController {
     @Log(title = "sbalance", businessType = BusinessType.UPDATE)
     @GetMapping(value = "/edit/{amount}")
     public AjaxResult edit(@PathVariable("amount") Long amount) {
-        return success(symDormitoryBalanceService.updateBalance(amount));
+        int res = symDormitoryBalanceService.updateBalance(amount);
+        // 睡眠3 秒
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return success(res);
     }
 
     /**
