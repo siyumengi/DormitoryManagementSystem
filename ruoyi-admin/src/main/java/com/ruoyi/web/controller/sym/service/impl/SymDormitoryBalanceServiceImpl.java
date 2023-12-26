@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.web.controller.sym.domain.CurrentUser;
 import com.ruoyi.web.controller.sym.domain.SymPaymentRecord;
 import com.ruoyi.web.controller.sym.domain.SymStudent;
 import com.ruoyi.web.controller.sym.mapper.SymPaymentRecordMapper;
@@ -27,6 +28,7 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
 
     @Resource
     private SymPaymentRecordMapper symPaymentRecordMapper;
+    private final CurrentUser currentUser = new CurrentUser();
 
     /**
      * 查询balance
@@ -80,8 +82,7 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
     public int updateBalance(Long num) {
         // 查询 宿舍的缴费记录
         SymStudent symStudent = new SymStudent();
-        symStudent.setResidenceHallId(1L);
-        symStudent.setDormitoryRoomNumber("101");
+        getUser(symStudent);
         SymDormitoryBalance symPaymentRecord = new SymDormitoryBalance();
         symPaymentRecord.setDormitoryId(symStudent.getResidenceHallId());
         symPaymentRecord.setRoomNumber(symStudent.getDormitoryRoomNumber());
@@ -94,7 +95,7 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
 
         BigDecimal electricityFee = symPaymentRecord1.getElectricityFee();
         // 两个相加 是否大于零 ，如果 大于零 则 说明 有电费，把 is_overdue 改为 0
-         symPaymentRecord1.setElectricityFee(electricityFee.add(new BigDecimal(num)).setScale(2,BigDecimal.ROUND_HALF_UP));
+        symPaymentRecord1.setElectricityFee(electricityFee.add(new BigDecimal(num)).setScale(2, BigDecimal.ROUND_HALF_UP));
         if (symPaymentRecord1.getElectricityFee().compareTo(BigDecimal.ZERO) > 0) {
             symPaymentRecord1.setIsOverdue(0L);
         }
@@ -121,7 +122,16 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
      */
     @Override
     public int deleteSymDormitoryBalanceByIds(Long[] ids) {
-        return symDormitoryBalanceMapper.deleteSymDormitoryBalanceByIds(ids);
+
+        // 将 电费 清0，欠缴状态为 1
+        for (Long id : ids) {
+            int res = deleteSymDormitoryBalanceById(id);
+            if (res == 0) {
+                throw new RuntimeException("重置失败");
+            }
+        }
+        return 1;
+
     }
 
     /**
@@ -132,15 +142,19 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
      */
     @Override
     public int deleteSymDormitoryBalanceById(Long id) {
-        return symDormitoryBalanceMapper.deleteSymDormitoryBalanceById(id);
+        SymDormitoryBalance symDormitoryBalance = new SymDormitoryBalance();
+
+        symDormitoryBalance.setId(id);
+        symDormitoryBalance.setElectricityFee(BigDecimal.ZERO);
+        symDormitoryBalance.setIsOverdue(1L);
+        return symDormitoryBalanceMapper.updateSymDormitoryBalance(symDormitoryBalance);
     }
 
     @Override
     public List<SymPaymentRecord> searcherList(SymDormitoryBalance symDormitoryBalance) {
         // 查询 宿舍的缴费记录
         SymStudent symStudent = new SymStudent();
-        symStudent.setResidenceHallId(1L);
-        symStudent.setDormitoryRoomNumber("101");
+        getUser(symStudent);
         SymPaymentRecord symPaymentRecord = new SymPaymentRecord();
         symPaymentRecord.setResidenceHallId(symStudent.getResidenceHallId());
         symPaymentRecord.setRoomNumber(symStudent.getDormitoryRoomNumber());
@@ -151,8 +165,7 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
     public SymDormitoryBalance getRecord(Long id) {
         // 查询 宿舍的费用
         SymStudent symStudent = new SymStudent();
-        symStudent.setResidenceHallId(1L);
-        symStudent.setDormitoryRoomNumber("101");
+        getUser(symStudent);
         SymDormitoryBalance symPaymentRecord = new SymDormitoryBalance();
         symPaymentRecord.setDormitoryId(symStudent.getResidenceHallId());
         symPaymentRecord.setRoomNumber(symStudent.getDormitoryRoomNumber());
@@ -162,5 +175,11 @@ public class SymDormitoryBalanceServiceImpl implements ISymDormitoryBalanceServi
             return symPaymentRecords.get(0);
         }
         throw new RuntimeException("没有查询到缴费记录");
+    }
+
+    private static void getUser(SymStudent symStudent) {
+        symStudent.setResidenceHallId(1L);
+        symStudent.setDormitoryRoomNumber("101");
+
     }
 }
